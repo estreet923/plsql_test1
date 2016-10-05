@@ -1,0 +1,40 @@
+--------------------------------------------------------
+--  File created - Wednesday-October-05-2016   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Function STU_LIST_ATTR
+--------------------------------------------------------
+
+  CREATE OR REPLACE FUNCTION "MAWILLIA"."STU_LIST_ATTR" 
+(
+subj_code_in in scrattr.scrattr_subj_code%type,crse_numb_in in scrattr.scrattr_crse_numb%type,max_term_in in scrattr.scrattr_eff_term%type
+)
+return varchar2 as 
+--tuesday morning hb923 again2
+--Xsubj_code_in scrattr.scrattr_subj_code%type:='BIO';
+--Xcrse_numb_in scrattr.scrattr_crse_numb%type:=103;
+great_list varchar2(100);
+cursor build_list is
+    select --scrattr_subj_code,scrattr_crse_numb,
+    LISTAGG(scrattr_attr_code, ',') WITHIN GROUP (ORDER BY scrattr_attr_code) AS great_list
+    FROM   scrattr o
+    where scrattr_subj_code=subj_code_in and scrattr_crse_numb=crse_numb_in
+    --and scrattr_eff_term='201209'
+    and scrattr_eff_term=
+      (select max(scrattr_eff_term) from scrattr i
+        where o.scrattr_subj_code=i.scrattr_subj_code and
+            o.scrattr_crse_numb=i.scrattr_crse_numb and
+            i.scrattr_eff_term<=max_term_in)
+    --GROUP BY scrattr_subj_code,scrattr_crse_numb
+    ;
+ begin
+     open build_list;
+        fetch build_list into great_list;
+            if build_list%notfound then
+                return null;
+            end if;
+        return great_list;
+--
+end stu_list_attr;
+
+/
