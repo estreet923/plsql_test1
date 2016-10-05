@@ -11,6 +11,7 @@ subj_code_in in scrattr.scrattr_subj_code%type,crse_numb_in in scrattr.scrattr_c
 )
 return varchar2 as 
 --tuesday morning hb923 again2
+--for newtest - adding something
 --Xsubj_code_in scrattr.scrattr_subj_code%type:='BIO';
 --Xcrse_numb_in scrattr.scrattr_crse_numb%type:=103;
 great_list varchar2(100);
